@@ -13,17 +13,18 @@ import java.util.Locale;
 public class Movie {
     protected int id;
     protected String link;
-    protected String name;
+    protected String title;
     protected Date date;
     protected ArrayList<String> genre;
     protected float rating;
     protected int score;
 
     // Constructors
-    public Movie(int id, String link, String name, int year, ArrayList<String> genre, float rating, int score) {
+    public Movie(int id, String link, String title, int year, ArrayList<String> genre, float rating, int score) {
         this.id = id;
         this.link = link;
-        this.name = name;
+        this.title = title;
+
 
         try {
             this.date = fromYearToDate(year);
@@ -37,7 +38,7 @@ public class Movie {
     public Movie() {
         this.id = -1;
         this.link = null;
-        this.name = null;
+        this.title = null;
         this.date = new Date();
         this.genre = new ArrayList<>();
         this.rating = 0F;
@@ -55,8 +56,8 @@ public class Movie {
         return link;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
     
     public Date getDate() {
@@ -84,8 +85,8 @@ public class Movie {
         this.link = link;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setDate(Date date) {
@@ -104,11 +105,19 @@ public class Movie {
         this.score = score;
     }
     
-    /* Transform date to milliseconds */
+    /* Transform year to date */
     public Date fromYearToDate(int year) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         Date date = sdf.parse("01/01/" + year);
         return date;
+    }
+
+    /* Transform date to year */
+    public int fromDateToYear(Date date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.US);
+        String yearString = sdf.format(date);
+        int year = Integer.parseInt(yearString);
+        return year;
     }
     
     /* Transform milliseconds to date */
@@ -125,7 +134,7 @@ public class Movie {
     public String toString() {
         return "\nID: " + id +
                "\nLink: " + link + 
-               "\nName: " + name +
+               "\nTitle: " + title +
                "\nDate: " + date +
                "\nGenre: " + genre +
                "\nRating: " + rating +
@@ -139,7 +148,7 @@ public class Movie {
 
         dos.writeInt(id);
         dos.writeUTF(link);
-        dos.writeUTF(name);
+        dos.writeUTF(title);
         dos.writeLong(date.getTime());
 
         String genreStr = genre.toString();
@@ -159,7 +168,7 @@ public class Movie {
 
         id = dis.readInt();
         link = dis.readUTF();
-        name = dis.readUTF();
+        title = dis.readUTF();
 
         try {
             date = fromMillisToDate(dis.readLong());
@@ -172,4 +181,6 @@ public class Movie {
         rating = dis.readFloat();
         score = dis.readInt();
     }
+
+
 }
