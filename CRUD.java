@@ -3,10 +3,129 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class CRUD {
     protected static RandomAccessFile arq;
     protected static byte[] bytesArray;
+
+    /* Menu */
+    public static void menu() throws IOException {
+        int option = -1;
+        while (option != 5) {
+            System.out.println("------ CRUD ------");
+            System.out.println("- 1) Populate    -");
+            System.out.println("- 2) Read (ID)   -");
+            System.out.println("- 3) Update      -");        
+            System.out.println("- 4) Delete (ID) -");        
+            System.out.println("- 5) Exit        -");
+
+            System.out.println("------------------");
+
+            System.out.print("Choose an option -> ");
+            Scanner sc = new Scanner(System.in);
+
+            option = sc.nextInt();
+            clearBuffer(sc);
+
+            switch (option) {
+                case 1:
+                    Start.populate();
+                    System.out.println("File populated successfully.");
+                    break;
+                    
+                case 2:
+                    System.out.println("------ READ ------");
+                    System.out.print("- ID: ");
+                    int idGiven = sc.nextInt();
+                    System.out.println("------------------");
+
+                    Movie movieResp = search(idGiven);
+
+                    if (movieResp != null) { System.out.println(movieResp); }
+                    else { System.out.println("Record doesn't exist.");}
+
+                    break;
+
+                case 3:
+                    System.out.println("----- UPDATE -----");
+                    // ID
+                    System.out.print("Movie's ID: ");
+                    int id = sc.nextInt();
+                    clearBuffer(sc);
+
+                    // Link
+                    System.out.print("Movie's link: ");
+                    String link = sc.nextLine();
+
+                    
+                    // Title 
+                    System.out.print("Movie's title: ");
+                    String title = sc.nextLine();
+
+                    // Year
+                    System.out.print("Movie's year: ");
+                    int year = sc.nextInt();
+
+                    // Genres
+                    clearBuffer(sc);
+                    System.out.print("Movie's genres: ");
+                    String genresGiven = sc.nextLine();
+                    
+                    ArrayList<String> genres = new ArrayList<String>();
+
+                    String[] genresSplitted = genresGiven.split(",");
+                    for (String genre : genresSplitted) { genres.add(genre.trim()); }
+
+                    // Rating
+                    System.out.print("Movie's rating: ");
+                    float rating = sc.nextFloat();
+
+                    // Score
+                    clearBuffer(sc);
+                    System.out.print("Movie's score: ");
+                    int score = sc.nextInt();
+
+                    // Movie object instantiation
+                    Movie movie = new Movie(id, link, title, year, genres, rating, score);  
+
+                    System.out.println("------------------");
+
+                    boolean resp = update(movie);
+                    if (resp) { System.out.println("Data updated successfully."); }
+                    else { System.out.println("Something went wrong."); }
+                    
+                    break;
+
+                case 4:
+                    System.out.println("----- DELETE -----");
+                    System.out.print("- ID: ");
+                    int idDelGiven = sc.nextInt();
+                    System.out.println("------------------");
+
+                    boolean respDel = delete(idDelGiven);
+                    if (respDel) { System.out.println("Record deleted successfully."); }
+                    else { System.out.println("Something went wrong."); }
+
+                    break;
+                
+                case 5:
+                    break;
+                    
+                default:
+                    System.out.println("You must provide a valid option.");
+            }
+
+            sc.close();
+        }
+        
+    }
+
+    public static void clearBuffer(Scanner sc) {
+        if (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+    }
 
     // CRUD methods
 
