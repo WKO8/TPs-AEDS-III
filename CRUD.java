@@ -12,32 +12,32 @@ public class CRUD {
     /* Menu */
     public static void menu() throws IOException {
         int option = -1;
+        Scanner sc = new Scanner(System.in);
         while (option != 5) {
-            System.out.println("------ CRUD ------");
+            System.out.println("\n------ CRUD ------");
             System.out.println("- 1) Populate    -");
             System.out.println("- 2) Read (ID)   -");
             System.out.println("- 3) Update      -");        
             System.out.println("- 4) Delete (ID) -");        
             System.out.println("- 5) Exit        -");
-
             System.out.println("------------------");
 
             System.out.print("Choose an option -> ");
-            Scanner sc = new Scanner(System.in);
-
+            
             option = sc.nextInt();
             clearBuffer(sc);
 
             switch (option) {
                 case 1:
                     Start.populate();
-                    System.out.println("File populated successfully.");
+                    System.out.println("\nFile populated successfully.");
                     break;
                     
                 case 2:
                     System.out.println("------ READ ------");
                     System.out.print("- ID: ");
                     int idGiven = sc.nextInt();
+                    clearBuffer(sc);
                     System.out.println("------------------");
 
                     Movie movieResp = search(idGiven);
@@ -66,9 +66,10 @@ public class CRUD {
                     // Year
                     System.out.print("Movie's year: ");
                     int year = sc.nextInt();
+                    clearBuffer(sc);
 
                     // Genres
-                    clearBuffer(sc);
+                    
                     System.out.print("Movie's genres: ");
                     String genresGiven = sc.nextLine();
                     
@@ -85,6 +86,7 @@ public class CRUD {
                     clearBuffer(sc);
                     System.out.print("Movie's score: ");
                     int score = sc.nextInt();
+                    clearBuffer(sc);
 
                     // Movie object instantiation
                     Movie movie = new Movie(id, link, title, year, genres, rating, score);  
@@ -101,6 +103,7 @@ public class CRUD {
                     System.out.println("----- DELETE -----");
                     System.out.print("- ID: ");
                     int idDelGiven = sc.nextInt();
+                    clearBuffer(sc);
                     System.out.println("------------------");
 
                     boolean respDel = delete(idDelGiven);
@@ -114,11 +117,9 @@ public class CRUD {
                     
                 default:
                     System.out.println("You must provide a valid option.");
-            }
-
-            sc.close();
+            }   
         }
-        
+        sc.close();
     }
 
     public static void clearBuffer(Scanner sc) {
