@@ -105,6 +105,14 @@ public class Movie {
         this.score = score;
     }
     
+    /* Compare two ID's */
+    public int compare(Movie mv) {
+        Movie movie = (Movie) mv;
+        if (this.id < movie.id) return -1;
+        else if (this.id > movie.id) return 1;
+        return 0;
+    }
+
     /* Transform year to date */
     public Date fromYearToDate(int year) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);

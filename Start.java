@@ -16,9 +16,9 @@ public class Start {
     protected static byte[] bytesArray;
 
 
-    protected static void populate() throws IOException {
+    protected static void populate(String filename) throws IOException {
         /* Initializing RandomAccessFile */
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         /* Read CSV */
         br = new BufferedReader(new FileReader(fileCSV));

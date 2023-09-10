@@ -8,18 +8,20 @@ import java.util.Scanner;
 public class CRUD {
     protected static RandomAccessFile arq;
     protected static byte[] bytesArray;
+    private static String filename = "database/movies.db";
 
     /* Menu */
-    public static void menu() throws IOException {
+    public static void menu() throws IOException, ParseException {
         int option = -1;
         Scanner sc = new Scanner(System.in);
-        while (option != 5) {
+        while (option != 6) {
             System.out.println("\n------ CRUD ------");
             System.out.println("- 1) Populate    -");
-            System.out.println("- 2) Read (ID)   -");
-            System.out.println("- 3) Update      -");        
-            System.out.println("- 4) Delete (ID) -");        
-            System.out.println("- 5) Exit        -");
+            System.out.println("- 2) Insert      -");
+            System.out.println("- 3) Read (ID)   -");
+            System.out.println("- 4) Update      -");        
+            System.out.println("- 5) Delete (ID) -");        
+            System.out.println("- 6) Exit        -");
             System.out.println("------------------");
 
             System.out.print("Choose an option -> ");
@@ -29,26 +31,13 @@ public class CRUD {
 
             switch (option) {
                 case 1:
-                    Start.populate();
+                    Start.populate(filename);
                     System.out.println("\nFile populated successfully.");
+                    InvertedIndex.updateFiles(filename);
                     break;
                     
                 case 2:
-                    System.out.println("------ READ ------");
-                    System.out.print("- ID: ");
-                    int idGiven = sc.nextInt();
-                    clearBuffer(sc);
-                    System.out.println("------------------");
-
-                    Movie movieResp = search(idGiven);
-
-                    if (movieResp != null) { System.out.println(movieResp); }
-                    else { System.out.println("Record doesn't exist.");}
-
-                    break;
-
-                case 3:
-                    System.out.println("----- UPDATE -----");
+                    System.out.println("----- INSERT -----");
                     // ID
                     System.out.print("Movie's ID: ");
                     int id = sc.nextInt();
@@ -93,13 +82,81 @@ public class CRUD {
 
                     System.out.println("------------------");
 
-                    boolean resp = update(movie);
-                    if (resp) { System.out.println("Data updated successfully."); }
-                    else { System.out.println("Something went wrong."); }
-                    
+                    insert(movie);
+                    System.out.println("Data entered successfully.");
+
+                    // Update Index files
+                    InvertedIndex.updateFiles(filename);
+                    break;
+                case 3:
+                    System.out.println("------ READ ------");
+                    System.out.print("- ID: ");
+                    int idGiven = sc.nextInt();
+                    clearBuffer(sc);
+                    System.out.println("------------------");
+
+                    Movie movieResp = search(idGiven);
+
+                    if (movieResp != null) { System.out.println(movieResp); }
+                    else { System.out.println("Record doesn't exist.");}
+
                     break;
 
                 case 4:
+                    System.out.println("----- UPDATE -----");
+                    // ID
+                    System.out.print("Movie's ID: ");
+                    int idUpdt = sc.nextInt();
+                    clearBuffer(sc);
+
+                    // Link
+                    System.out.print("Movie's link: ");
+                    String linkUpdt = sc.nextLine();
+
+                    
+                    // Title 
+                    System.out.print("Movie's title: ");
+                    String titleUpdt = sc.nextLine();
+
+                    // Year
+                    System.out.print("Movie's year: ");
+                    int yearUpdt = sc.nextInt();
+                    clearBuffer(sc);
+
+                    // Genres
+                    
+                    System.out.print("Movie's genres: ");
+                    String genresGivenUpdt = sc.nextLine();
+                    
+                    ArrayList<String> genresUpdt = new ArrayList<String>();
+
+                    String[] genresSplittedUpdt = genresGivenUpdt.split(",");
+                    for (String genre : genresSplittedUpdt) { genresUpdt.add(genre.trim()); }
+
+                    // Rating
+                    System.out.print("Movie's rating: ");
+                    float ratingUpdt = sc.nextFloat();
+
+                    // Score
+                    clearBuffer(sc);
+                    System.out.print("Movie's score: ");
+                    int scoreUpdt = sc.nextInt();
+                    clearBuffer(sc);
+
+                    // Movie object instantiation
+                    Movie movieUpdt = new Movie(idUpdt, linkUpdt, titleUpdt, yearUpdt, genresUpdt, ratingUpdt, scoreUpdt);  
+
+                    System.out.println("------------------");
+
+                    boolean resp = update(movieUpdt);
+                    if (resp) { System.out.println("Data updated successfully."); }
+                    else { System.out.println("Something went wrong."); }
+                    
+                    // Update Index files
+                    InvertedIndex.updateFiles(filename);
+                    break;
+
+                case 5:
                     System.out.println("----- DELETE -----");
                     System.out.print("- ID: ");
                     int idDelGiven = sc.nextInt();
@@ -110,9 +167,11 @@ public class CRUD {
                     if (respDel) { System.out.println("Record deleted successfully."); }
                     else { System.out.println("Something went wrong."); }
 
+                    // Update Index files
+                    InvertedIndex.updateFiles(filename);
                     break;
                 
-                case 5:
+                case 6:
                     break;
                     
                 default:
@@ -133,7 +192,7 @@ public class CRUD {
     /* Insert */
     public static void insert(Movie movie) throws IOException {
         /* Initializing RandomAccessFile */
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
         int lastID = arq.readInt();
@@ -388,6 +447,41 @@ public class CRUD {
 
             return moviesArray;
     }
+
+
+    /* Search by year & score */
+    public static ArrayList<String> searchByYearAndScore(int year, int score) throws IOException, ParseException {
+        arq = new RandomAccessFile("database/movies.db", "rw");
+        
+        arq.seek(0);
+
+        int lastID = arq.readInt();
+
+        Movie movie = new Movie();
+
+        int len;
+        ArrayList<String> moviesArray = new ArrayList<String>();
+
+        for (int i = 0; i < lastID; i++) {
+            char gravestone = arq.readChar();
+            len = arq.readInt();
+
+            bytesArray = new byte[len];
+            arq.read(bytesArray);
+
+            if (gravestone != '*') {
+                movie.fromByteArray(bytesArray);
+                if ((movie.fromDateToYear(movie.getDate()) == year) && (movie.getScore() == score)) {
+                    moviesArray.add(movie.toString());
+                }
+            }
+        }
+
+        arq.close();
+
+        return moviesArray;
+    }
+
 
     /* Update */
     public static boolean update(Movie movieArg) throws IOException {

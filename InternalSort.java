@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class InternalSort {
-    protected static class InsertionSort {
+    protected static class Sort {
         protected static ArrayList<Movie> sort(ArrayList<Movie> arr) {
             int n = arr.size();
             for (int i = 1; i < n; ++i) {
@@ -20,6 +20,5 @@ public class InternalSort {
 
             return arr;
         }
-        
     }
 }
