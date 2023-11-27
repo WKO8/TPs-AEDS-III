@@ -1,8 +1,11 @@
+package CRUD.Start;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+
+import CRUD.Movie.Movie;
 
 public class Start {
     /* Read CSV - Variables  */
@@ -16,7 +19,7 @@ public class Start {
     protected static byte[] bytesArray;
 
 
-    protected static void populate(String filename) throws IOException {
+    public static void populate(String filename) throws IOException {
         /* Initializing RandomAccessFile */
         arq = new RandomAccessFile(filename, "rw");
         

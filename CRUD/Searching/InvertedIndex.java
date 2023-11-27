@@ -1,3 +1,5 @@
+package CRUD.Searching;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -8,34 +10,82 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
+
+import CRUD.Movie.Movie;
 
 public class InvertedIndex {
     // Attributes
     private static RandomAccessFile file;
     private static byte[] bytesArray;
+    private static String filename = "files/hex/movies.db";
 
     // Constructor
     public InvertedIndex() {}
 
     // Methods
 
-    protected static void updateFiles(String filename) throws IOException, ParseException {
+    public static void menu() throws IOException, ParseException {
+
+        ByYear.invertedIndexByYear(filename);
+        ByScore.invertedIndexByScore(filename);
+
+        Scanner scanner = new Scanner(System.in);
+        int escolha;
+        do {
+            exibirMenu();
+            System.out.print("Escolha uma opçao: ");
+            escolha = scanner.nextInt();
+
+            switch (escolha) {
+                case 1:
+                    System.out.println("Year: ");
+                    int year = scanner.nextInt();
+
+                    System.out.println("Score: ");
+                    int score = scanner.nextInt();
+
+                    query(filename, year, score);
+                    break;
+                case 2:
+                    readFiles();
+                    break;
+                case 3:
+                    System.out.println("Você escolheu sair.");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        } while (escolha != 3);
+
+        scanner.close();
+    }
+
+    public static void exibirMenu() {
+        System.out.println("\n== Inverted Index ==");
+        System.out.println("| 1) Query          |");
+        System.out.println("| 2) Read All       |");          
+        System.out.println("| 3) Sair           |");
+        System.out.println("=====================");
+    }
+
+    public static void updateFiles(String filename) throws IOException, ParseException {
         ByYear.invertedIndexByYear(filename);
         ByScore.invertedIndexByScore(filename);
     }
 
     protected static void readFiles() throws IOException, ParseException {
-        ByYear.readFromFile("database/invIdx/invByYear.md");
-        ByScore.readFromFile("database/invIdx/invByScore.md");
+        ByYear.readFromFile("files/invIdx/invByYear.md");
+        ByScore.readFromFile("files/invIdx/invByScore.md");
     }
 
     protected static void query(String filename, int year, int score) throws IOException, ParseException {
         ByYear bY = new ByYear();
-        bY.indexes = bY.search("database/invIdx/invByYear.md", year).indexes;
+        bY.indexes = bY.search("files/invIdx/invByYear.md", year).indexes;
         String byYear = bY.indexes;
 
         ByScore bS = new ByScore();
-        bS.indexes = bS.search("database/invIdx/invByScore.md", score).indexes;
+        bS.indexes = bS.search("files/invIdx/invByScore.md", score).indexes;
         String byScore = bS.indexes;
 
         String[] byYearSpllited = byYear.split(" ");
@@ -49,7 +99,7 @@ public class InvertedIndex {
             }
         }
 
-        System.out.println("Result (IDs): " + res.toString());
+        System.out.println("\nResult (IDs): " + res.toString());
     }
 
     // Classes
@@ -75,7 +125,7 @@ public class InvertedIndex {
             // Fill List
             getYearsIndexes();
             // Name of file
-            String fileInvByYear = "database/invIdx/invByYear.md";
+            String fileInvByYear = "files/invIdx/invByYear.md";
             // Save data in file
             saveToFile(fileInvByYear);
             // Read from file
@@ -280,7 +330,7 @@ public class InvertedIndex {
             // Fill List
             getScoresIndexes();
             // Name of file
-            String fileInvByScore = "database/invIdx/invByScore.md";
+            String fileInvByScore = "files/invIdx/invByScore.md";
             // Save data in file
             saveToFile(fileInvByScore);
             // Read from file

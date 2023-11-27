@@ -1,4 +1,7 @@
+package CRUD.Sorting;
 import java.util.ArrayList;
+
+import CRUD.Movie.Movie;
 
 public class InternalSort {
     protected static class Sort {
@@ -12,10 +15,10 @@ public class InternalSort {
                 greater than key, to one position ahead
                 of their current position */
                 while (j >= 0 && arr.get(j).getID() > key) {
-                    arr.get(j + 1).id = arr.get(j).id = arr.get(j).id;
+                    arr.get(j + 1).setID(arr.get(j).getID());
                     j = j - 1;
                 }
-                arr.get(j+1).id = key;
+                arr.get(j+1).setID(key);
             }
 
             return arr;

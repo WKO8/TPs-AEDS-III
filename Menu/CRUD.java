@@ -1,3 +1,4 @@
+package Menu;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -5,10 +6,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import CRUD.Movie.Movie;
+import CRUD.Searching.InvertedIndex;
+import CRUD.Start.Start;
+
 public class CRUD {
     protected static RandomAccessFile arq;
     protected static byte[] bytesArray;
-    private static String filename = "database/movies.db";
+    private static String filename = "files/hex/movies.db";
 
     /* Menu */
     public static void menu() throws IOException, ParseException {
@@ -196,10 +201,10 @@ public class CRUD {
         
         arq.seek(0);
         int lastID = arq.readInt();
-        movie.id = lastID + 1;
+        movie.setID(lastID + 1);
 
         arq.seek(0);
-        arq.writeInt(movie.id);
+        arq.writeInt(movie.getID());
 
         bytesArray = movie.toByteArray();
 
@@ -218,7 +223,7 @@ public class CRUD {
     /* Read all records */
     public static void read() throws IOException {
         /* Initializing RandomAccessFile */
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
 
         /* Read */
         Movie movie = new Movie();
@@ -252,7 +257,7 @@ public class CRUD {
 
     /* Search by ID*/
     public static Movie search(int id) throws IOException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -271,7 +276,7 @@ public class CRUD {
 
             if (gravestone != '*') {
                 movie.fromByteArray(bytesArray);
-                if (movie.id == id) {
+                if (movie.getID() == id) {
                     return movie;
                 }
             }
@@ -284,7 +289,7 @@ public class CRUD {
 
     /* Search by title */
     public static Movie search(String title) throws IOException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -303,7 +308,7 @@ public class CRUD {
 
             if (gravestone != '*') {
                 movie.fromByteArray(bytesArray);
-                if (movie.title.equals(title)) {
+                if (movie.getTitle().equals(title)) {
                     return movie;
                 }
             }
@@ -316,7 +321,7 @@ public class CRUD {
 
     /* Search by year */
     public static ArrayList<String> searchByYear(int year) throws IOException, ParseException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -349,7 +354,7 @@ public class CRUD {
 
     /* Search by genre */
     public static ArrayList<String> searchByGenre(String genre) throws IOException, ParseException {
-            arq = new RandomAccessFile("database/movies.db", "rw");
+            arq = new RandomAccessFile(filename, "rw");
             
             arq.seek(0);
 
@@ -369,7 +374,7 @@ public class CRUD {
 
                 if (gravestone != '*') {
                     movie.fromByteArray(bytesArray);
-                    for (String genreName : movie.genre) {
+                    for (String genreName : movie.getGenre()) {
                         if (genreName.indexOf(genre) != -1) {
                             moviesArray.add(movie.toString());
                         }
@@ -384,7 +389,7 @@ public class CRUD {
 
     /* Search by rating */
     public static ArrayList<String> search(float rating) throws IOException, ParseException {
-            arq = new RandomAccessFile("database/movies.db", "rw");
+            arq = new RandomAccessFile(filename, "rw");
             
             arq.seek(0);
 
@@ -404,7 +409,7 @@ public class CRUD {
 
                 if (gravestone != '*') {
                     movie.fromByteArray(bytesArray);
-                    if (movie.rating == rating) {
+                    if (movie.getRating() == rating) {
                         moviesArray.add(movie.toString());
                     }
                 }
@@ -417,7 +422,7 @@ public class CRUD {
 
     /* Search by score */
     public static ArrayList<String> searchByScore(int score) throws IOException, ParseException {
-            arq = new RandomAccessFile("database/movies.db", "rw");
+            arq = new RandomAccessFile(filename, "rw");
             
             arq.seek(0);
 
@@ -437,7 +442,7 @@ public class CRUD {
 
                 if (gravestone != '*') {
                     movie.fromByteArray(bytesArray);
-                    if (movie.score == score) {
+                    if (movie.getScore() == score) {
                         moviesArray.add(movie.toString());
                     }
                 }
@@ -451,7 +456,7 @@ public class CRUD {
 
     /* Search by year & score */
     public static ArrayList<String> searchByYearAndScore(int year, int score) throws IOException, ParseException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -485,7 +490,7 @@ public class CRUD {
 
     /* Update */
     public static boolean update(Movie movieArg) throws IOException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -507,7 +512,7 @@ public class CRUD {
 
             if (gravestone != '*') {
                 movie.fromByteArray(bytesArray);
-                if (movie.id == movieArg.id) {
+                if (movie.getID() == movieArg.getID()) {
                     bytesArray = movieArg.toByteArray();
                     if (bytesArray.length <= len) {
                         arq.seek(pointer);
@@ -531,7 +536,7 @@ public class CRUD {
 
                         /* Update the metadata of the last id */
                         arq.seek(0);
-                        arq.writeInt(movieArg.id);
+                        arq.writeInt(movieArg.getID());
                     }
                     resp = true;
                 }
@@ -545,7 +550,7 @@ public class CRUD {
 
     /* Delete */
     public static boolean delete(int id) throws IOException {
-        arq = new RandomAccessFile("database/movies.db", "rw");
+        arq = new RandomAccessFile(filename, "rw");
         
         arq.seek(0);
 
@@ -567,14 +572,14 @@ public class CRUD {
 
             if (gravestone != '*') {
                 movie.fromByteArray(bytesArray);
-                if (movie.id == id) {
+                if (movie.getID() == id) {
                     arq.seek(pointer);
                     arq.writeChar('*');
                     return true;
                 }
             } else {
                 movie.fromByteArray(bytesArray);
-                if (movie.id == id) {
+                if (movie.getID() == id) {
                     return true;
                 }
             }

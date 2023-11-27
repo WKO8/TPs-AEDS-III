@@ -1,12 +1,15 @@
+package CRUD.Sorting;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import CRUD.Movie.Movie;
+
 public class ExternalSort {
     protected static RandomAccessFile arq;
     protected static byte[] bytesArray;
-    private static String filename = "database/movies.db";
+    private static String filename = "files/hex/movies.db";
 
     /* Menu */
     public static void menu() throws IOException {
@@ -295,8 +298,8 @@ public class ExternalSort {
         public static boolean commomFiles(int blockSize, int pathQuantity) throws IOException {
             ArrayList<Movie> movies = getRecords(filename);
 
-            RandomAccessFile fileTemp1 = new RandomAccessFile("database/filetemp1.db", "rw");            
-            RandomAccessFile fileTemp2 = new RandomAccessFile("database/filetemp2.db", "rw");
+            RandomAccessFile fileTemp1 = new RandomAccessFile("files/temp/filetemp1.db", "rw");            
+            RandomAccessFile fileTemp2 = new RandomAccessFile("files/temp/filetemp2.db", "rw");
 
             ArrayList<Movie> toSort = new ArrayList<Movie>();
             
@@ -322,7 +325,7 @@ public class ExternalSort {
 
                 if (fileNum == 1) {
                     if (toSort.size() > 0 && sort) {
-                        toSort = InternalSort.InsertionSort.sort(toSort);
+                        toSort = InternalSort.Sort.sort(toSort);
                         for (Movie movie : toSort) { 
                             bytesArray = movie.toByteArray();
                             int len = bytesArray.length;
@@ -337,7 +340,7 @@ public class ExternalSort {
 
                 } else if (fileNum == 2) {
                     if (toSort.size() > 0 && sort) {
-                        toSort = InternalSort.InsertionSort.sort(toSort);
+                        toSort = InternalSort.Sort.sort(toSort);
                         for (Movie movie : toSort) { 
                             bytesArray = movie.toByteArray();
                             int len = bytesArray.length;
@@ -356,20 +359,20 @@ public class ExternalSort {
             fileTemp2.close();            
 
             System.out.println("\n" + "FILE TEMP 1" + "\n");
-            read("database/filetemp1.db");
+            read("files/temp/filetemp1.db");
 
             System.out.println("\n" + "FILE TEMP 2" + "\n");
-            read("database/filetemp2.db");
+            read("files/temp/filetemp2.db");
 
             
             /* 
              * Balanced Interleaving - Step 2.1 
              */
 
-            // fileTemp1 = new RandomAccessFile("database/filetemp1.db", "rw");            
-            // fileTemp2 = new RandomAccessFile("database/filetemp2.db", "rw");
-            // RandomAccessFile fileTemp3 = new RandomAccessFile("database/filetemp3.db", "rw");            
-            // RandomAccessFile fileTemp4 = new RandomAccessFile("database/filetemp4.db", "rw");
+            // fileTemp1 = new RandomAccessFile("files/temp/filetemp1.db", "rw");            
+            // fileTemp2 = new RandomAccessFile("files/temp/filetemp2.db", "rw");
+            // RandomAccessFile fileTemp3 = new RandomAccessFile("files/temp/filetemp3.db", "rw");            
+            // RandomAccessFile fileTemp4 = new RandomAccessFile("files/temp/filetemp4.db", "rw");
 
             // long pointer1 = 0;
             // long pointer2 = 0;            
@@ -612,8 +615,8 @@ public class ExternalSort {
             // fileTemp3.close();            
             // fileTemp4.close();
 
-            // read("database/filetemp3.db");            
-            // read("database/filetemp4.db");
+            // read("files/temp/filetemp3.db");            
+            // read("files/temp/filetemp4.db");
             /* Balanced Interleaving - Step 2.2 */
 
             return true;
@@ -653,7 +656,7 @@ public class ExternalSort {
             }
 
             for (Movie record : records) {
-                System.out.println(record.id);
+                System.out.println(record.getID());
             }
 
             System.out.println("\n" + records.size());
@@ -681,7 +684,7 @@ public class ExternalSort {
                 arq.read(bytesArray);
                 movie.fromByteArray(bytesArray);
 
-                System.out.println(movie.id);
+                System.out.println(movie.getID());
 
                 pointer = arq.getFilePointer();
             }
