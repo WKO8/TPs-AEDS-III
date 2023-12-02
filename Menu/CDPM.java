@@ -20,12 +20,12 @@ public class CDPM {
 
         do {
             exibirMenu();
-            System.out.print("Escolha uma opçao: ");
+            System.out.print("Choose an option: ");
             escolha = scanner.nextInt();
 
             switch (escolha) {
                 case 1:
-                    System.out.println("--- Compressao ---");
+                    System.out.println("--- Compression ---");
 
                     long startTimeHuffmanCompression = System.currentTimeMillis();
                     HuffmanCompression.compress(filePath);
@@ -57,13 +57,13 @@ public class CDPM {
                     break;
 
                 case 2:
-                    System.out.println("--- Descompressao ---");
-                    System.out.println("=== VERSOES ===");
+                    System.out.println("--- Decompression ---");
+                    System.out.println("=== Versions ===");
                     System.out.println("| 1) Huffman  |");
                     System.out.println("| 2) LZW      |");
-                    System.out.println("| 3) Voltar   |");
+                    System.out.println("| 3) Back   |");
                     System.out.println("===============");
-                    System.out.println("Qual versao deseja realizar a descompressao? ");
+                    System.out.println("Which version do you want to perform the decompression? ");
 
                     int versao = scanner.nextInt();
 
@@ -94,16 +94,16 @@ public class CDPM {
                     break;
 
                 case 3:
-                    System.out.println("--- Casamento de padroes ---");
-                    System.out.println("===== MÉTODOS =====");
+                    System.out.println("--- Pattern Matching ---");
+                    System.out.println("===== METHODS =====");
                     System.out.println("| 1) Boyer Moore  |");
                     System.out.println("| 2) KMP          |");
                     System.out.println("===================");
-                    System.out.println("Escolha um método: ");
+                    System.out.println("Choose a method: ");
                     
                     int metodo = scanner.nextInt();
 
-                    System.out.println("Padrao que deseja procurar: ");
+                    System.out.println("Pattern you want to search for: ");
                     String padrao = scanner.next();
                     
 
@@ -115,10 +115,10 @@ public class CDPM {
 
                     break;
                 case 4:
-                    System.out.println("Você escolheu sair.");
+                    System.out.println("You chose to leave.");
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Invalid option. Try again.");
             }
         } while (escolha != 4);
 
@@ -126,12 +126,11 @@ public class CDPM {
     }
 
     public static void exibirMenu() {
-        System.out.println("\n=== Menu de Opçoes ===");
-        System.out.println("| 1) Compressao      |");
-        System.out.println("| 2) Descompressao   |");        
-        System.out.println("| 3) Casamento de    |");
-        System.out.println("|    padroes         |");
-        System.out.println("| 4) Sair            |");
+        System.out.println("\n=== Options menu ===");
+        System.out.println("| 1) Compression     |");
+        System.out.println("| 2) Decompression   |");        
+        System.out.println("| 3) Pattern Matching|");
+        System.out.println("| 4) Exit            |");
         System.out.println("======================");
     }
 }

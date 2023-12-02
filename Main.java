@@ -4,9 +4,10 @@ import java.util.Scanner;
 
 import CRUD.Searching.InvertedIndex;
 import CRUD.Sorting.ExternalSort;
-import Menu.CDPM;
-import Menu.CRUD;
 
+import Menu.CRUD;
+import Menu.CDPM;
+import Menu.Encryption;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
@@ -14,7 +15,7 @@ public class Main {
         int escolha;
         do {
             exibirMenu();
-            System.out.print("Escolha uma opçao: ");
+            System.out.print("Choose an option: ");
             escolha = scanner.nextInt();
 
             switch (escolha) {
@@ -31,12 +32,14 @@ public class Main {
                     CDPM.menu();
                     break;
                 case 5:
-                    System.out.println("Você escolheu sair.");
+                    Encryption.menu();
+                case 6:
+                    System.out.println("You chose to leave.");
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Invalid option. Try again.");
             }
-        } while (escolha != 5);
+        } while (escolha != 6);
 
         scanner.close();
     }
@@ -46,8 +49,9 @@ public class Main {
         System.out.println("| 1) CRUD           |");
         System.out.println("| 2) External Sort  |");         
         System.out.println("| 3) Inverted Index |");        
-        System.out.println("| 4) CDPM           |");        
-        System.out.println("| 5) Sair           |");
+        System.out.println("| 4) CDPM           |");          
+        System.out.println("| 5) Encryption     |");        
+        System.out.println("| 6) Sair           |");
         System.out.println("=====================");
         System.out.println("- CRUD: Create, Read, Update, Delete");
         System.out.println("- CDPM: Compression, Decompression, Pattern Matching\n");
