@@ -108,9 +108,16 @@ public class CDPM {
                     
 
                     if (metodo == 1) {
+                        long startTimeBM = System.currentTimeMillis();
                         BoyerMoorePatternMatching.main(padrao);
+                        long finalBMTime = System.currentTimeMillis() - startTimeBM;
+                        System.out.println("[Pattern Matching - Boyer Moore] Execution time: " + finalBMTime + "ms");
+
                     } else if (metodo == 2) {
+                        long startTimeKMP = System.currentTimeMillis();
                         KMPPatternMatching.main(padrao);
+                        long finalKMPTime = System.currentTimeMillis() - startTimeKMP;
+                        System.out.println("[Pattern Matching - KMP] Execution time: " + finalKMPTime + "ms");
                     }
 
                     break;

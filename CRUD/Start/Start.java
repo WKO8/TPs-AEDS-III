@@ -9,7 +9,7 @@ import CRUD.Movie.Movie;
 
 public class Start {
     /* Read CSV - Variables  */
-    protected static String fileCSV = "movies_imdb_1000.csv";
+    protected static String fileCSV = "files/movies_imdb_1000.csv";
     protected static BufferedReader br = null;
     protected static String line = "";
     protected static String csvDelimiter = ";";

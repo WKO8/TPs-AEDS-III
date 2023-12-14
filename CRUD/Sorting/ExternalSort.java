@@ -40,7 +40,13 @@ public class ExternalSort {
                     int pathQuantity = sc.nextInt();
                     clearBuffer(sc);
 
+                    long startTime = System.currentTimeMillis();
+                    
                     Commom.commomFiles(blockSize, pathQuantity);
+
+                    long extSortTime = System.currentTimeMillis() - startTime;
+                    System.out.println("[External Sorting] Execution time: " + extSortTime + "ms");
+
                     break;
                     
                 case 2:

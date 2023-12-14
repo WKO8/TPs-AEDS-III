@@ -23,16 +23,36 @@ public class Encryption {
             switch (escolha) {
                 case 1:
                     if (escolhaCriptografia == 1) {
+                        long startEncryptTime = System.currentTimeMillis();
+
                         VigenereCipher.encrypt();
+
+                        long vigenereETime = System.currentTimeMillis() - startEncryptTime;
+                        System.out.println("[Encryption - Vigenère] Execution time: " + vigenereETime + "ms");
                     } else if (escolhaCriptografia == 2) {
+                        long startDecryptTime = System.currentTimeMillis();
+
                         VigenereCipher.decrypt();
+
+                        long vigenereDTime = System.currentTimeMillis() - startDecryptTime;
+                        System.out.println("[Encryption - Vigenère] Execution time: " + vigenereDTime + "ms");
                     }
                     break;
                 case 2:
                     if (escolhaCriptografia == 1) {
+                        long startETime = System.currentTimeMillis();
+
                         TranspositionCipher.encrypt();
+
+                        long transpositionTime = System.currentTimeMillis() - startETime;
+                        System.out.println("[Encryption - Transposition] Execution time: " + transpositionTime + "ms");
                     } else if (escolhaCriptografia == 2) {
+                        long startDTime = System.currentTimeMillis();
+
                         TranspositionCipher.decrypt();
+
+                        long transpositionTime = System.currentTimeMillis() - startDTime;
+                        System.out.println("[Encryption - Transposition] Execution time: " + transpositionTime + "ms");
                     }   
                     break;
                 case 3:

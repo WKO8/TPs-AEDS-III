@@ -70,8 +70,11 @@ public class InvertedIndex {
     }
 
     public static void updateFiles(String filename) throws IOException, ParseException {
+        long startTime = System.currentTimeMillis();
         ByYear.invertedIndexByYear(filename);
         ByScore.invertedIndexByScore(filename);
+        long invIdxTime = System.currentTimeMillis() - startTime;
+        System.out.println("[Inverted List] Execution time: " + invIdxTime + "ms");
     }
 
     protected static void readFiles() throws IOException, ParseException {
@@ -80,6 +83,9 @@ public class InvertedIndex {
     }
 
     protected static void query(String filename, int year, int score) throws IOException, ParseException {
+
+        long startTime = System.currentTimeMillis();
+
         ByYear bY = new ByYear();
         bY.indexes = bY.search("files/invIdx/invByYear.md", year).indexes;
         String byYear = bY.indexes;
@@ -100,6 +106,10 @@ public class InvertedIndex {
         }
 
         System.out.println("\nResult (IDs): " + res.toString());
+
+        long fullQueryTime = System.currentTimeMillis() - startTime;
+        System.out.println("[Inverted List - Full Query] Execution time: " + fullQueryTime + "ms");
+        
     }
 
     // Classes
